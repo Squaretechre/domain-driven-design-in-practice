@@ -1,6 +1,7 @@
 ﻿using System;
 using DddInPractice.Logic;
 using FluentAssertions;
+using FluentAssertions.Common;
 using Xunit;
 
 namespace DddInPractice.Tests
@@ -65,6 +66,66 @@ namespace DddInPractice.Tests
         oneDollarCount,
         fiveDollarCount,
         twentyDollarCount);
+
+      action.Should().Throw<InvalidOperationException>();
+    }
+
+    [Theory]
+    [InlineData(0, 0, 0, 0, 0, 0, 0)]
+    [InlineData(1, 0, 0, 0, 0, 0, 0.01)]
+    [InlineData(1, 2, 0, 0, 0, 0, 0.21)]
+    [InlineData(1, 2, 3, 0, 0, 0, 0.96)]
+    [InlineData(1, 2, 3, 4, 0, 0, 4.96)]
+    [InlineData(1, 2, 3, 4, 5, 0, 29.96)]
+    [InlineData(1, 2, 3, 4, 5, 6, 149.96)]
+    [InlineData(11, 0, 0, 0, 0, 0, 0.11)]
+    [InlineData(110, 0, 0, 0, 100, 0, 501.1)]
+    public void amount_is_calculated_correctly(
+      int oneCountCount,
+      int tenCentCount,
+      int quarterCount,
+      int oneDollarCount,
+      int fiveDollarCount,
+      int twentyDollarCount,
+      decimal expectedAmount)
+    {
+      var money = new Money(
+        oneCountCount,
+        tenCentCount,
+        quarterCount,
+        oneDollarCount,
+        fiveDollarCount,
+        twentyDollarCount);
+
+      money.Amount.Should().Be(expectedAmount);
+    }
+
+    [Fact]
+    public void subtraction_of_two_moneys_produces_correct_result()
+    {
+      var money1 = new Money(10, 10, 10, 10, 10, 10);
+      var money2 = new Money(1, 2, 3, 4, 5, 6);
+
+      var result = money1 - money2;
+
+      result.OneCentCount.Should().Be(9);
+      result.TenCentCount.Should().Be(8);
+      result.QuarterCount.Should().Be(7);
+      result.OneDollarCount.Should().Be(6);
+      result.FiveDollarCount.Should().Be(5);
+      result.TwentyDollarCount.Should().Be(4);
+    }
+
+    [Fact]
+    public void cannot_subtract_more_than_exists()
+    {
+      var money1 = new Money(0, 1, 0, 0, 0, 0);
+      var money2 = new Money(1, 0, 0, 0, 0, 0);
+
+      Action action = () =>
+      {
+        var money = money1 - money2;
+      };
 
       action.Should().Throw<InvalidOperationException>();
     }
