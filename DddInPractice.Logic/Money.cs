@@ -1,4 +1,6 @@
-﻿namespace DddInPractice.Logic
+﻿using System;
+
+namespace DddInPractice.Logic
 {
     public class Money : ValueObject<Money>
     {
@@ -18,12 +20,19 @@
             int twentyDollarCount
         )
         {
-            OneCentCount += oneCentCount;
-            TenCentCount += tenCentCount;
-            QuarterCount += quarterCount;
-            OneDollarCount += oneDollarCount;
-            FiveDollarCount += fiveDollarCount;
-            TwentyDollarCount += twentyDollarCount;
+            if(oneCentCount < 0) throw new InvalidOperationException();
+            if(tenCentCount < 0) throw new InvalidOperationException();
+            if(quarterCount < 0) throw new InvalidOperationException();
+            if(oneDollarCount < 0) throw new InvalidOperationException();
+            if(fiveDollarCount < 0) throw new InvalidOperationException();
+            if(twentyDollarCount < 0) throw new InvalidOperationException();
+
+            OneCentCount = oneCentCount;
+            TenCentCount = tenCentCount;
+            QuarterCount = quarterCount;
+            OneDollarCount = oneDollarCount;
+            FiveDollarCount = fiveDollarCount;
+            TwentyDollarCount = twentyDollarCount;
         }
 
         public static Money operator +(Money money1, Money money2)
