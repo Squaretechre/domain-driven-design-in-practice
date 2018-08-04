@@ -1,24 +1,32 @@
-﻿namespace DddInPractice.Logic
+﻿using System;
+using System.Linq;
+using static DddInPractice.Logic.Money;
+
+namespace DddInPractice.Logic
 {
-    public sealed class SnackMachine : Entity
+  public sealed class SnackMachine : Entity
+  {
+    public Money MoneyInside { get; private set; } = None;
+    public Money MoneyInTransaction { get; private set; } = None;
+
+    public void InsertMoney(Money money)
     {
-        public Money MoneyInside { get; private set; }
-        public Money MoneyInTransaction { get; private set; }
+      Money[] coinsAndNotes = {Cent, TenCent, Quarter, Dollar, FiveDollar, TwentyDollar};
+      if (!coinsAndNotes.Contains(money))
+        throw new InvalidOperationException();
 
-        public void InsertMoney(Money money)
-        {
-            MoneyInTransaction += money;
-        }
-
-        public void ReturnMoney()
-        {
-            // MoneyInTransaction = 0;
-        }
-
-        public void BuySnack()
-        {
-            MoneyInside += MoneyInTransaction;
-            // MoneyInTransaction = 0;
-        }
+      MoneyInTransaction += money;
     }
+
+    public void ReturnMoney()
+    {
+      MoneyInTransaction = None;
+    }
+
+    public void BuySnack()
+    {
+      MoneyInside += MoneyInTransaction;
+      MoneyInTransaction = None;
+    }
+  }
 }
