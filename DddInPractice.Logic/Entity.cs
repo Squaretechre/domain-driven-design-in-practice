@@ -1,8 +1,11 @@
-﻿namespace DddInPractice.Logic
+﻿using System;
+using NHibernate.Proxy;
+
+namespace DddInPractice.Logic
 {
     public abstract class Entity
     {
-        public long Id { get; private set; }
+        public virtual long Id { get; private set; }
 
         public override bool Equals(object obj)
         {
@@ -14,7 +17,7 @@
             if (ReferenceEquals(this, other))
                 return true;
 
-            if (GetType() != other.GetType())
+            if (GetRealType() != other.GetRealType())
                 return false;
 
             if (Id == 0 || other.Id == 0)
@@ -43,5 +46,10 @@
         {
             return (GetType().ToString() + Id).GetHashCode();
         }
+
+      private Type GetRealType()
+      {
+        return NHibernateProxyHelper.GetClassWithoutInitializingProxy(this);
+      }
     }
 }
