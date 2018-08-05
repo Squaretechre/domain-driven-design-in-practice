@@ -1,7 +1,6 @@
 ﻿using System;
 using DddInPractice.Logic;
 using FluentAssertions;
-using FluentAssertions.Common;
 using Xunit;
 
 namespace DddInPractice.Tests
