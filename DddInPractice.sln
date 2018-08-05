@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DddInPractice.Logic", "DddI
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DddInPractice.Tests", "DddInPractice.Tests\DddInPractice.Tests.csproj", "{B3DF5383-8E19-4274-AD23-7E14EDDC239C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DddInPractice.UI", "DddInPractice.UI\DddInPractice.UI.csproj", "{C976072E-744B-4C34-AF19-BCB0F9CF9FBB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{B3DF5383-8E19-4274-AD23-7E14EDDC239C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B3DF5383-8E19-4274-AD23-7E14EDDC239C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B3DF5383-8E19-4274-AD23-7E14EDDC239C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C976072E-744B-4C34-AF19-BCB0F9CF9FBB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C976072E-744B-4C34-AF19-BCB0F9CF9FBB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C976072E-744B-4C34-AF19-BCB0F9CF9FBB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C976072E-744B-4C34-AF19-BCB0F9CF9FBB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
