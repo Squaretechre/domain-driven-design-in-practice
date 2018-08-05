@@ -11,7 +11,7 @@ namespace DddInPractice.UI
     private string _message = string.Empty;
     public override string Caption => "Snack Machine";
     public string MoneyInTransaction => _snackMachine.MoneyInTransaction.ToString();
-    public Money MoneyInside => _snackMachine.MoneyInside + _snackMachine.MoneyInTransaction;
+    public Money MoneyInside => _snackMachine.MoneyInside;
 
     public string Message
     {

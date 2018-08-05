@@ -27,7 +27,7 @@ namespace DddInPractice.Logic
       FiveDollarCount * 5 +
       TwentyDollarCount * 20;
 
-    private Money() {}
+    private Money() { }
 
     public Money(
           int oneCentCount,
@@ -77,6 +77,17 @@ namespace DddInPractice.Logic
       );
     }
 
+    public static Money operator *(Money money1, int multiplier)
+    {
+      return new Money(
+        money1.OneCentCount * multiplier,
+        money1.TenCentCount * multiplier,
+        money1.QuarterCount * multiplier,
+        money1.OneDollarCount * multiplier,
+        money1.FiveDollarCount * multiplier,
+        money1.TwentyDollarCount * multiplier);
+    }
+
     protected override bool EqualsCore(Money other)
     {
       return OneCentCount == other.OneCentCount
@@ -91,7 +102,7 @@ namespace DddInPractice.Logic
     {
       unchecked
       {
-        int hashCode = OneCentCount;
+        var hashCode = OneCentCount;
         hashCode = (hashCode * 397) ^ TenCentCount;
         hashCode = (hashCode * 397) ^ QuarterCount;
         hashCode = (hashCode * 397) ^ OneDollarCount;
@@ -107,6 +118,34 @@ namespace DddInPractice.Logic
         return "¢" + (Amount * 100).ToString("0");
 
       return "$" + Amount.ToString("0.00");
+    }
+
+    public Money Allocate(decimal amount)
+    {
+      var twentyDollarCount = Math.Min((int)(amount / 20), TwentyDollarCount);
+      amount = amount - twentyDollarCount * 20;
+
+      var fiveDollarCount = Math.Min((int)(amount / 5), FiveDollarCount);
+      amount = amount - fiveDollarCount * 5;
+
+      var oneDollarCount = Math.Min((int)amount, OneDollarCount);
+      amount = amount - oneDollarCount;
+
+      var quarterCount = Math.Min((int)(amount / 0.25m), QuarterCount);
+      amount = amount - quarterCount * 0.25m;
+
+      var tenCentCount = Math.Min((int)(amount / 0.1m), TenCentCount);
+      amount = amount - tenCentCount * 0.1m;
+
+      var oneCentCount = Math.Min((int)(amount / 0.01m), OneCentCount);
+
+      return new Money(
+        oneCentCount,
+        tenCentCount,
+        quarterCount,
+        oneDollarCount,
+        fiveDollarCount,
+        twentyDollarCount);
     }
   }
 }
