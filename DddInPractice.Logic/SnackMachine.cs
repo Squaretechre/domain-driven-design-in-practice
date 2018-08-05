@@ -72,7 +72,7 @@ namespace DddInPractice.Logic
       return Slots.Single(x => x.Position.Equals(position));
     }
 
-    public void LoadMoney(Money money)
+    public virtual void LoadMoney(Money money)
     {
       MoneyInside += money;
     }
