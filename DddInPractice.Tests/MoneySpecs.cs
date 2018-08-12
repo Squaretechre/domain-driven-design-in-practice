@@ -1,5 +1,6 @@
 ﻿using System;
 using DddInPractice.Logic;
+using DddInPractice.Logic.SharedKernel;
 using FluentAssertions;
 using Xunit;
 

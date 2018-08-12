@@ -1,6 +1,7 @@
 ﻿using System;
+using DddInPractice.Logic.Common;
 
-namespace DddInPractice.Logic
+namespace DddInPractice.Logic.SharedKernel
 {
   public class Money : ValueObject<Money>
   {
@@ -120,7 +121,21 @@ namespace DddInPractice.Logic
       return "$" + Amount.ToString("0.00");
     }
 
+    public bool CanAllocate(decimal amount)
+    {
+      var money = AllocateCore(amount);
+      return money.Amount.Equals(amount);
+    }
+
     public Money Allocate(decimal amount)
+    {
+      if(!CanAllocate(amount))
+        throw new InvalidOperationException();
+
+      return AllocateCore(amount);
+    }
+
+    public Money AllocateCore(decimal amount)
     {
       var twentyDollarCount = Math.Min((int)(amount / 20), TwentyDollarCount);
       amount = amount - twentyDollarCount * 20;

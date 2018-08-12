@@ -1,16 +1,13 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using FluentNHibernate.Cfg;
 using FluentNHibernate.Cfg.Db;
 using FluentNHibernate.Conventions;
 using FluentNHibernate.Conventions.AcceptanceCriteria;
 using FluentNHibernate.Conventions.Helpers;
 using FluentNHibernate.Conventions.Instances;
-using FluentNHibernate.Visitors;
 using NHibernate;
-using NHibernate.Impl;
 
-namespace DddInPractice.Logic
+namespace DddInPractice.Logic.Utils
 {
   public static class SessionFactory
   {

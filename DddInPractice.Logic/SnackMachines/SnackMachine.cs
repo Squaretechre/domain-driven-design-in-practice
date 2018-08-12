@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using static DddInPractice.Logic.Money;
+using DddInPractice.Logic.Common;
+using DddInPractice.Logic.SharedKernel;
 
-namespace DddInPractice.Logic
+namespace DddInPractice.Logic.SnackMachines
 {
   public class SnackMachine : AggregateRoot
   {
@@ -13,7 +14,7 @@ namespace DddInPractice.Logic
 
     public SnackMachine()
     {
-      MoneyInside = None;
+      MoneyInside = Money.None;
       MoneyInTransaction = 0;
       Slots = new List<Slot>
       {
@@ -25,7 +26,7 @@ namespace DddInPractice.Logic
 
     public virtual void InsertMoney(Money money)
     {
-      Money[] coinsAndNotes = {Cent, TenCent, Quarter, Dollar, FiveDollar, TwentyDollar};
+      Money[] coinsAndNotes = {Money.Cent, Money.TenCent, Money.Quarter, Money.Dollar, Money.FiveDollar, Money.TwentyDollar};
       if (!coinsAndNotes.Contains(money))
         throw new InvalidOperationException();
 
@@ -40,18 +41,31 @@ namespace DddInPractice.Logic
       MoneyInTransaction = 0;
     }
 
+    public virtual string CanBuySnack(int position)
+    {
+      var snackPile = GetSnackPile(position);
+
+      if (snackPile.Quantity == 0)
+        return "The snack pile is empty";
+
+      if (MoneyInTransaction < snackPile.Price)
+        return "Not enough money";
+
+      if (!MoneyInside.CanAllocate(MoneyInTransaction - snackPile.Price))
+        return "Not enough change";
+
+      return string.Empty;
+    }
+
     public virtual void BuySnack(int position)
     {
-      var slot = GetSlotAt(position);
-      if(slot.SnackPile.Price > MoneyInTransaction)
+      if(CanBuySnack(position) != string.Empty)
         throw new InvalidOperationException();
 
+      var slot = GetSlotAt(position);
       slot.SnackPile = slot.SnackPile.SubtractOne();
 
       var change = MoneyInside.Allocate(MoneyInTransaction - slot.SnackPile.Price);
-      if(change.Amount < MoneyInTransaction - slot.SnackPile.Price)
-        throw new InvalidOperationException();
-
       MoneyInside -= change;
       MoneyInTransaction = 0;
     }
@@ -60,6 +74,14 @@ namespace DddInPractice.Logic
     {
       var slot = Slots.Single(x => x.Position.Equals(position));
       slot.SnackPile = snackPile;
+    }
+
+    public virtual IReadOnlyList<SnackPile> GetAllSnackPiles()
+    {
+      return Slots
+        .OrderBy(x => x.Position)
+        .Select(x => x.SnackPile)
+        .ToList();
     }
 
     public virtual SnackPile GetSnackPile(int position)

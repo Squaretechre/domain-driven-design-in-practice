@@ -1,20 +1,15 @@
-﻿using DddInPractice.Logic;
-using NHibernate;
+﻿using DddInPractice.Logic.Atms;
+using DddInPractice.UI.Atms;
 
 namespace DddInPractice.UI.Common
 {
-  public class MainViewModel : ViewModel
-  {
-    public MainViewModel()
+    public class MainViewModel : ViewModel
     {
-      SnackMachine snackMachine;
-      using (ISession session = SessionFactory.OpenSession())
-      {
-        snackMachine = session.Get<SnackMachine>(1L);
-      }
-
-      var viewModel = new SnackMachineViewModel(snackMachine);
-      _dialogService.ShowDialog(viewModel);
+        public MainViewModel()
+        {
+            Atm atm = new AtmRepository().GetById(1);
+            var viewModel = new AtmViewModel(atm);
+            _dialogService.ShowDialog(viewModel);
+        }
     }
-  }
 }

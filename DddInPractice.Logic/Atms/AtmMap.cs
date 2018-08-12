@@ -1,13 +1,14 @@
-﻿using FluentNHibernate;
-using FluentNHibernate.Mapping;
+﻿using FluentNHibernate.Mapping;
 
-namespace DddInPractice.Logic
+namespace DddInPractice.Logic.Atms
 {
-  public class SnackMachineMap : ClassMap<SnackMachine>
+  class AtmMap : ClassMap<Atm>
   {
-    public SnackMachineMap()
+    public AtmMap()
     {
       Id(x => x.Id);
+
+      Map(x => x.MoneyCharged);
 
       Component(x => x.MoneyInside, y =>
       {
@@ -18,8 +19,6 @@ namespace DddInPractice.Logic
         y.Map(x => x.FiveDollarCount);
         y.Map(x => x.TwentyDollarCount);
       });
-
-      HasMany<Slot>(Reveal.Member<SnackMachine>("Slots")).Cascade.SaveUpdate().Not.LazyLoad();
     }
   }
 }
