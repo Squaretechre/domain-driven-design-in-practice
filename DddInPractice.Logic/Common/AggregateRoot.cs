@@ -4,7 +4,17 @@ namespace DddInPractice.Logic.Common
 {
   public abstract class AggregateRoot : Entity
   {
-    public virtual int Version { get; protected set; }
-    private List<DomainEvent> _events = new List<DomainEvent>();
+    private readonly List<IDomainEvent> _domainEvents = new List<IDomainEvent>();
+    public virtual IReadOnlyList<IDomainEvent> DomainEvents => _domainEvents;
+
+    protected virtual void AddDomainEvent(IDomainEvent newEvent)
+    {
+      _domainEvents.Add(newEvent);
+    }
+
+    public virtual void ClearEvents()
+    {
+      _domainEvents.Clear();
+    }
   }
 }

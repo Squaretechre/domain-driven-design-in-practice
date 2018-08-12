@@ -85,6 +85,7 @@
     <Compile Include="Management\HeadOfficeRepository.cs" />
     <Compile Include="SnackMachines\Slot.cs" />
     <Compile Include="Common\Entity.cs" />
+    <Compile Include="Utils\EventListener.cs" />
     <Compile Include="Utils\Initer.cs" />
     <Compile Include="SharedKernel\Money.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -6,6 +6,7 @@ using FluentNHibernate.Conventions.AcceptanceCriteria;
 using FluentNHibernate.Conventions.Helpers;
 using FluentNHibernate.Conventions.Instances;
 using NHibernate;
+using NHibernate.Event;
 
 namespace DddInPractice.Logic.Utils
 {
@@ -35,7 +36,17 @@ namespace DddInPractice.Logic.Utils
               .When(criteria => criteria.Expect(x => x.Nullable, Is.Not.Set), x => x.Not.Nullable()))
           .Conventions.Add<TableNameConvention>()
           .Conventions.Add<HiLoConvention>()
-        );
+        ).ExposeConfiguration(x =>
+        {
+          x.EventListeners.PostCommitUpdateEventListeners =
+            new IPostUpdateEventListener[] { new EventListener() };
+          x.EventListeners.PostInsertEventListeners =
+            new IPostInsertEventListener[] { new EventListener() };
+          x.EventListeners.PostCommitDeleteEventListeners =
+            new IPostDeleteEventListener[] { new EventListener() };
+          x.EventListeners.PostCollectionUpdateEventListeners =
+            new IPostCollectionUpdateEventListener[] { new EventListener() };
+        });
 
       return configuration.BuildSessionFactory();
     }

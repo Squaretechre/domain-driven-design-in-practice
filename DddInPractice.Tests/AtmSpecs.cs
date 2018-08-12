@@ -1,4 +1,6 @@
-﻿using DddInPractice.Logic.Atms;
+﻿using System.Linq;
+using System.ServiceModel.Syndication;
+using DddInPractice.Logic.Atms;
 using DddInPractice.Logic.Common;
 using DddInPractice.Logic.SharedKernel;
 using DddInPractice.Logic.Utils;
@@ -10,11 +12,6 @@ namespace DddInPractice.Tests
 {
   public class AtmSpecs
   {
-    public AtmSpecs()
-    {
-      Initer.Init(@"Server=.;Database=DddInPractice;Trusted_Connection=true");
-    }
-
     [Fact]
     public void take_money_exchanges_money_with_commission()
     {
@@ -54,13 +51,22 @@ namespace DddInPractice.Tests
     {
       var atm = new Atm();
       atm.LoadMoney(Dollar);
-      BalanceChangedEvent balanceChangedEvent = null;
-      DomainEvents.Register<BalanceChangedEvent>(ev => balanceChangedEvent = ev);
 
       atm.TakeMoney(1m);
 
-      balanceChangedEvent.Should().NotBeNull();
-      balanceChangedEvent.Delta.Should().Be(1.01m);
+      atm.ShouldContainBalanceChangedEvent(1.01m);
+    }
+  }
+
+  internal static class AtmExtensions
+  {
+    public static void ShouldContainBalanceChangedEvent(this Atm atm, decimal delta)
+    {
+      BalanceChangedEvent domainEvent = (BalanceChangedEvent) atm.DomainEvents
+        .SingleOrDefault(x => x.GetType() == typeof(BalanceChangedEvent));
+
+      domainEvent.Should().NotBeNull();
+      domainEvent.Delta.Should().Be(delta);
     }
   }
 }
