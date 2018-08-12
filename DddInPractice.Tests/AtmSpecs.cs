@@ -1,5 +1,7 @@
 ﻿using DddInPractice.Logic.Atms;
+using DddInPractice.Logic.Common;
 using DddInPractice.Logic.SharedKernel;
+using DddInPractice.Logic.Utils;
 using static DddInPractice.Logic.SharedKernel.Money;
 using FluentAssertions;
 using Xunit;
@@ -8,6 +10,11 @@ namespace DddInPractice.Tests
 {
   public class AtmSpecs
   {
+    public AtmSpecs()
+    {
+      Initer.Init(@"Server=.;Database=DddInPractice;Trusted_Connection=true");
+    }
+
     [Fact]
     public void take_money_exchanges_money_with_commission()
     {
@@ -40,6 +47,20 @@ namespace DddInPractice.Tests
       atm.TakeMoney(1.1m);
 
       atm.MoneyCharged.Should().Be(1.12m);
+    }
+
+    [Fact]
+    public void take_money_raises_an_event()
+    {
+      var atm = new Atm();
+      atm.LoadMoney(Dollar);
+      BalanceChangedEvent balanceChangedEvent = null;
+      DomainEvents.Register<BalanceChangedEvent>(ev => balanceChangedEvent = ev);
+
+      atm.TakeMoney(1m);
+
+      balanceChangedEvent.Should().NotBeNull();
+      balanceChangedEvent.Delta.Should().Be(1.01m);
     }
   }
 }
