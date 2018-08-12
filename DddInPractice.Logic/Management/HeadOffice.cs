@@ -1,5 +1,7 @@
-﻿using DddInPractice.Logic.Common;
+﻿using DddInPractice.Logic.Atms;
+using DddInPractice.Logic.Common;
 using DddInPractice.Logic.SharedKernel;
+using DddInPractice.Logic.SnackMachines;
 
 namespace DddInPractice.Logic.Management
 {
@@ -11,6 +13,18 @@ namespace DddInPractice.Logic.Management
     public virtual void ChangeBalance(decimal delta)
     {
       Balance += delta;
+    }
+
+    public virtual void UnloadCashFromSnackMachine(SnackMachine snackMachine)
+    {
+      var money = snackMachine.UnloadMoney();
+      Cash += money;
+    }
+
+    public virtual void LoadCashToAtm(Atm atm)
+    {
+      atm.LoadMoney(Cash);
+      Cash = Money.None;
     }
   }
 }

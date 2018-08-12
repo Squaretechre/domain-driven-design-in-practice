@@ -1,4 +1,5 @@
 ﻿using DddInPractice.Logic.Atms;
+using DddInPractice.Logic.Management;
 using DddInPractice.Logic.SharedKernel;
 using DddInPractice.UI.Common;
 
@@ -37,14 +38,14 @@ namespace DddInPractice.UI.Atms
 
         private void TakeMoney(decimal amount)
         {
-            var error = _atm.CanTakeMoney(amount);
+            string error = _atm.CanTakeMoney(amount);
             if (error != string.Empty)
             {
                 NotifyClient(error);
                 return;
             }
 
-            var amountWithCommission = _atm.CalculateAmountWithCommission(amount);
+            decimal amountWithCommission = _atm.CalculateAmountWithCommission(amount);
             _paymentGateway.ChargePayment(amountWithCommission);
             _atm.TakeMoney(amount);
             _repository.Save(_atm);
